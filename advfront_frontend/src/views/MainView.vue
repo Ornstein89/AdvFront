@@ -36,9 +36,13 @@
         </v-row>
 
         <audio
+          ref="audio"
           style="width:100%"
-          controls>
-          <source src="https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_5MG.mp3" type="audio/mpeg">
+          :src="'http://localhost:8000/media/'+this.soundFile"
+          preload="auto"
+          controls
+        >
+          <!-- <source src="xxx.wav" type="audio/mpeg"> -->
           Your browser does not support the audio tag.
         </audio>
 
@@ -168,6 +172,7 @@ export default {
       uploadLoading : true,
       showmessage : false,
       messagetext : "",
+      soundFile : "",
     }
   },
   methods: {
@@ -194,9 +199,22 @@ export default {
       if(File===null)
         return;
       console.log(File)
-      axios.post("/upload", {params:{}})
+      const formData = new FormData();
+      formData.append("file", File);
+      axios.post(
+        "/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // "Content-Type": "application/form-data"
+          },
+          onUploadProgress:this.onUploadProgress,
+        }
+      )
       .then(response => {
         console.log("response = ", response)
+        this.soundFile = response.data.file;
         this.uploadLoading = false;
       })
       .catch(error => {
@@ -209,7 +227,13 @@ export default {
         console.log("finally");
         this.uploadLoading = false;
       });
-    }
+    },
+
+    onUploadProgress(progressEvent){
+      // console.log("onUploadProgress = ", progressEvent);
+      // console.log("onUploadProgress = ", progressEvent.loaded);
+      this.uploadLoading = progressEvent.loaded/progressEvent.total * 100;
+    },
   },
 }
 </script>
