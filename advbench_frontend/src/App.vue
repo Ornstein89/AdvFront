@@ -42,6 +42,17 @@
   </v-app>
 </template>
 
+<script>
+export default {
+  name: 'App',
+  data () {
+    return {
+      loading : false,
+    }
+  }
+}
+</script>
+
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

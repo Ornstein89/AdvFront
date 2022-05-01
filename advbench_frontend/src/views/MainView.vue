@@ -28,17 +28,18 @@
           clearable
           accept="audio/*"
           label="Choose file"
-          @change="fileUpload"
+          v-model="soundFiles"
           :loading="uploadLoading"
+          @change="fileUpload($event)"
         >
         </v-file-input>
-        <!-- <v-btn>Upload</v-btn> -->
+        <!-- <v-btn @click="fileUpload">Upload</v-btn> -->
         </v-row>
 
         <audio
           ref="audio"
           style="width:100%"
-          :src="'http://localhost:8000/media/'+this.soundFile"
+          :src="uploadedfileurl"
           preload="auto"
           controls
         >
@@ -67,7 +68,7 @@
               ref="btnPredict"
               class="ma-2"
               color="primary"
-              :loading="btnPlayLoading"
+              :loading="isBtnPredictLoading"
               @click="btnPredictClick"
             >Predict</v-btn>
 
@@ -168,60 +169,76 @@ export default {
     return {
       completed : 50,
       method : 0,
-      btnPredictLoading : false,
+      isBtnPredictLoading : false,
       uploadLoading : true,
       showmessage : false,
       messagetext : "",
-      soundFile : "",
+      soundFiles : [],
+      uploadedfileurl : "",
     }
   },
   methods: {
     btnPredictClick(){
-      this.btnPredictLoading = true;
+      this.isBtnPredictLoading = true;
       axios.post("/predict", {params:{}})
       .then(response => {
         console.log("response = ", response)
-        this.btnPredictLoading = false;
+        this.isBtnPredictLoading = false;
       })
       .catch(error => {
         console.log("error=",error);
         this.messagetext = error;
         this.showmessage = true;
-        this.btnPredictLoading = false;
+        this.isBtnPredictLoading = false;
       })
       .finally(() => {
         console.log("finally");
-        this.btnPredictLoading = false;
+        this.isBtnPredictLoading = false;
       });
     },
 
-    fileUpload(File) {
-      if(File===null)
+    fileUpload(event) {
+      console.log("event=", event)
+      console.log("event.target=", event.target)
+      if(!this.soundFiles)
         return;
-      console.log(File)
-      const formData = new FormData();
-      formData.append("file", File);
+      // console.log("File = ", File, File.name);
+      console.log('this.soundFiles = ', this.soundFiles);
+      let formData = new FormData();
+      formData.append("files", this.soundFiles, this.soundFiles.name); // soundFiles - модель v-file-input
+      console.log("File = ", File, File.name);
       axios.post(
         "/upload",
         formData,
         {
-          headers: {
+          headers:{
             "Content-Type": "multipart/form-data",
-            // "Content-Type": "application/form-data"
           },
-          onUploadProgress:this.onUploadProgress,
-        }
+          onUploadProgress: function (progressEvent) {
+            this.uploadLoading =
+            progressEvent.loaded/progressEvent.total * 100;
+          },
+        },
+        
       )
       .then(response => {
         console.log("response = ", response)
-        this.soundFile = response.data.file;
-        this.uploadLoading = false;
+        if(response.data.status==="ok"){
+          this.uploadedfileurl = response.data.fileurl;
+          console.log("response.data.fileurl = ", response.data.fileurl);
+          console.log("this.uploadedfileurl = ", this.uploadedfileurl);
+        }
+        else{
+          this.messagetext = response.data.message;
+          this.showmessage = true;
+        }
+        // this.uploadLoading = false;
       })
       .catch(error => {
         console.log("error=",error);
         this.messagetext = error;
         this.showmessage = true;
-        this.uploadLoading = false;
+        // this.uploadLoading = false;
       })
       .finally(() => {
         console.log("finally");
