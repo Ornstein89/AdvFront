@@ -1,13 +1,32 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView
+from django.core.files.storage import FileSystemStorage
+from django.core.files.temp import NamedTemporaryFile
+from django.http import FileResponse, HttpResponse
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
-from django.core.files.storage import FileSystemStorage
-from django.core.files.temp import NamedTemporaryFile
 from rest_framework import authentication
 from rest_framework import permissions
 from rest_framework.parsers import FormParser, JSONParser, FileUploadParser, MultiPartParser
 # Create your views here.
+
+# def send_file(response, filename):
+
+#     img = open("../advbench_frontend/dist/favicon.ico", 'rb')
+
+#     response = FileResponse(img)
+
+#     return response
+
+# def send_js(request):
+#     filename = request.path.strip("/")
+#     data = open("../advbench_frontend/dist" + filename, "rb").read()
+#     return HttpResponse(data, mimetype="application/javascript")
+
+# class VueView(TemplateView):
+#     template_name = "index.html"
 
 class Upload(APIView):
     # https://stackoverflow.com/a/64582388/12691808
@@ -28,7 +47,7 @@ class Upload(APIView):
                          "message"  :"В отправленных данных не найден файл"})
         savedfileurl = None
         try:
-            fs = FileSystemStorage()
+            fs = FileSystemStorage(location="uploads")
             savedfilename = fs.save(acceptedfile.name, acceptedfile)
             savedfileurl = fs.url(savedfilename)
         except:

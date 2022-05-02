@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,7 +60,7 @@ ROOT_URLCONF = 'advbench_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['../advbench_frontend/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,9 +122,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/'
+STATICFILES_DIRS = (
+    # os.path.join(BASE_DIR, "static"),
+    "../advbench_frontend/dist",
+)
+# MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/'
+MEDIA_ROOT = "../advbench_frontend/dist"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)
+    mimetypes.add_type("text/css", ".css", True)

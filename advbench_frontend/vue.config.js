@@ -3,6 +3,7 @@ module.exports = { //defineConfig(
   transpileDependencies: [
     'vuetify'
   ],
+  outputDir : "../advbench_backend/media",
   devServer: {
     proxy: 'http://localhost:8000'
   },
