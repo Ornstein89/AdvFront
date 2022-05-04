@@ -1,9 +1,9 @@
 const { defineConfig } = require('@vue/cli-service')
-module.exports = { //defineConfig(
+module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
   ],
-  outputDir : "../advbench_backend/media",
+  outputDir : "../advbench_backend/media", // собирать в каталог django
   devServer: {
     proxy: 'http://localhost:8000'
   },
@@ -38,4 +38,4 @@ module.exports = { //defineConfig(
   //   //   }
   //   // }
   // }  
-}//)
+})

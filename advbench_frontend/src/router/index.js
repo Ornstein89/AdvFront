@@ -1,14 +1,29 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainView from '../views/MainView.vue'
+import OriginalView from '../views/OriginalView.vue'
+import AdversarialView from '../views/AdversarialView.vue'
+import UserView from '../views/UserView.vue'
+
 // import Axios from 'axios'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'main',
-    component: MainView
+    name: 'originalsamples',
+    component: OriginalView,
+    params: true,
+  },
+  {
+    path: '/adversarialsamples',
+    name: 'adversarialsamples',
+    component: OriginalView,
+    // params: true,
+  },
+  {
+    path: '/usersample',
+    name: 'usersample',
+    component: UserView
   },
   {
     path: '/login',

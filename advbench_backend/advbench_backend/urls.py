@@ -35,7 +35,7 @@ urlpatterns = [
     # static("css", document_root='../advbench_frontend/dist/css'),
     # static("js", document_root='../advbench_frontend/dist/js'),
     # path('favicon.ico', send_file, {'filename': '../advbench_frontend/dist/favicon.ico'}),
-    # path('css/<path:path>', serve, {'document_root': '../advbench_frontend/dist/css'}),
+    re_path(r"^(?P<path>\w+.wav)$", serve, {'document_root': './uploads'}),
     # path('js/<path:path>', serve, {'document_root': '../advbench_frontend/dist/js'}),
     # re_path(r'^js/(?*)$', send_js),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

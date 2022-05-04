@@ -10,23 +10,30 @@ from rest_framework.request import Request
 from rest_framework import authentication
 from rest_framework import permissions
 from rest_framework.parsers import FormParser, JSONParser, FileUploadParser, MultiPartParser
-# Create your views here.
+
 
 # def send_file(response, filename):
-
 #     img = open("../advbench_frontend/dist/favicon.ico", 'rb')
-
 #     response = FileResponse(img)
-
 #     return response
 
 # def send_js(request):
+#     """
+#     Функция выдаёт по запросу *.js файлы, присваивая им соответствующий
+#     mime-тип и предотвращая возникновение ошибки при строгой проверке
+#     типов на стороне клиента
+#     
+#     """
 #     filename = request.path.strip("/")
 #     data = open("../advbench_frontend/dist" + filename, "rb").read()
 #     return HttpResponse(data, mimetype="application/javascript")
 
-# class VueView(TemplateView):
-#     template_name = "index.html"
+class VueView(TemplateView):
+    """
+    Класс для выдачи корневого файла фронтенда vue
+    с сервера django (только для )
+    """
+    template_name = "index.html"
 
 class Upload(APIView):
     # https://stackoverflow.com/a/64582388/12691808
